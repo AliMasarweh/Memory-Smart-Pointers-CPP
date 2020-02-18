@@ -44,6 +44,14 @@ public:
         return *this;
     }
 
+    UniquePointer<T>& operator=(UnownedPointer<T>& unownedPointer)
+    {
+        this->pntr = unownedPointer.uniquePointer;
+        unownedPointer.uniquePointer = NULL;
+
+        return *this;
+    }
+
     UniquePointer<T>& operator=(UniquePointer<T>& uniquePointer)
     {
         this->pntr = uniquePointer.pntr;
