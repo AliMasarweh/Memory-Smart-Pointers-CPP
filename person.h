@@ -12,7 +12,6 @@ public:
 
     void doSomthing();
 
-private:
     char fullname[32];
     unsigned int id;
     unsigned int age;
