@@ -23,9 +23,11 @@ public:
         this->count = new size_t(1);
     }
 
-    explicit SharedPointer(SharedPointer & sharedPointer)
+    template <class V>
+    explicit SharedPointer(SharedPointer<V> & sharedPointer)
     : pntr(sharedPointer.pntr), count(count)
     {
+        T* uslessPointer = new V;
         this->count = sharedPointer.count;
         size_t& x = *(this->count);
         ++ *(this->count);

@@ -14,3 +14,5 @@ Person::Person(char *fullname, unsigned int id, unsigned int age)
 void Person::doSomthing() {
 
 }
+
+Person::Person():fullname(""),id(0),age(0) {}

@@ -8,6 +8,7 @@
 class Person
 {
 public:
+    Person();
     Person(char *fullname, unsigned int id, unsigned int age);
 
     void doSomthing();
