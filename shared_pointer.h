@@ -13,35 +13,39 @@ class SharedPointer
 private:
     T* pntr;
     size_t* count;
-    SharedPointer<T>* m_ownerBefore;
+
+    template <class V>
+    friend class SharedPointer;
 
 public:
     explicit SharedPointer(T* pntr = NULL): pntr(pntr)
     {
         this->count = new size_t(1);
-        m_ownerBefore = NULL;
     }
 
-    explicit SharedPointer(SharedPointer& sharedPointer)
+    explicit SharedPointer(SharedPointer & sharedPointer)
     : pntr(sharedPointer.pntr), count(count)
     {
         this->count = sharedPointer.count;
+        size_t& x = *(this->count);
         ++ *(this->count);
-        m_ownerBefore = &sharedPointer;
     }
 
-    SharedPointer& operator=(SharedPointer& sharedPointer)
+    template <class V>
+    SharedPointer& operator=(SharedPointer<V> & sharedPointer)
     {
+        T* uslessPointer = new V;
         this->pntr = pntr;
         this->count = sharedPointer.count;
+        size_t& x = *(this->count);
         ++ *(this->count);
-        m_ownerBefore = &sharedPointer;
 
         return *this;
     }
 
     ~SharedPointer()
     {
+        size_t& x = *(this->count);
         -- *(this->count);
         if(*(this->count) == 0)
             delete pntr;
@@ -75,11 +79,6 @@ public:
     T* get()
     {
         return this->pntr;
-    }
-
-    SharedPointer<T>& owner_before()
-    {
-        return *(this->m_ownerBefore);
     }
 };
 
