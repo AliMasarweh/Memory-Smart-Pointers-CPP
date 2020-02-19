@@ -13,6 +13,9 @@ class UniquePointer;
 template <class T>
 class UnownedPointer
 {
+    template <class V>
+    friend class UniquePointer;
+
 public:
     T* uniquePointer;
 };
@@ -20,7 +23,6 @@ public:
 template <class T>
 class UniquePointer
 {
-
     friend UnownedPointer<T> move(UniquePointer<T>& uniquePointer)
     {
         UnownedPointer<T> unownedPointer;
