@@ -6,6 +6,7 @@
 #define SMARTPOINTEREXERCISE_SHARED_POINTER_H
 
 #include <stddef.h>
+#include <malloc.h>
 
 template <class T>
 class SharedPointer
@@ -27,7 +28,6 @@ public:
     explicit SharedPointer(SharedPointer<V> & sharedPointer)
     : pntr(sharedPointer.pntr), count(count)
     {
-        T* uslessPointer = new V;
         this->count = sharedPointer.count;
         size_t& x = *(this->count);
         ++ *(this->count);
@@ -36,8 +36,9 @@ public:
     template <class V>
     SharedPointer& operator=(SharedPointer<V> & sharedPointer)
     {
-        T* uslessPointer = new V;
-        this->pntr = pntr;
+        release();
+
+        this->pntr = sharedPointer.pntr;
         this->count = sharedPointer.count;
         size_t& x = *(this->count);
         ++ *(this->count);
@@ -45,12 +46,19 @@ public:
         return *this;
     }
 
-    ~SharedPointer()
+    void release()
     {
         size_t& x = *(this->count);
         -- *(this->count);
-        if(*(this->count) == 0)
+        if(*(this->count) == 0) {
             delete pntr;
+            delete count;
+        }
+    }
+
+    ~SharedPointer()
+    {
+        release();
     }
 
     T* operator ->()
