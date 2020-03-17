@@ -11,10 +11,6 @@
 template <class T>
 class SharedPointer
 {
-private:
-    T* pntr;
-    size_t* count;
-
     template <class V>
     friend class SharedPointer;
 
@@ -26,11 +22,15 @@ public:
 
     template <class V>
     explicit SharedPointer(SharedPointer<V> & sharedPointer)
-    : pntr(sharedPointer.pntr), count(count)
+    : pntr(sharedPointer.pntr), count(sharedPointer.count)
     {
-        this->count = sharedPointer.count;
-        size_t& x = *(this->count);
         ++ *(this->count);
+    }
+
+    SharedPointer(const SharedPointer<T> & copy)
+    :pntr(copy.pntr), count(copy.count)
+    {
+        ++ *(copy.count);
     }
 
     template <class V>
@@ -40,7 +40,6 @@ public:
 
         this->pntr = sharedPointer.pntr;
         this->count = sharedPointer.count;
-        size_t& x = *(this->count);
         ++ *(this->count);
 
         return *this;
@@ -48,9 +47,9 @@ public:
 
     void release()
     {
-        size_t& x = *(this->count);
         -- *(this->count);
-        if(*(this->count) == 0) {
+        if(*(this->count) == 0)
+        {
             if(pntr != NULL)
                 delete pntr;
             delete count;
@@ -91,6 +90,10 @@ public:
     {
         return this->pntr;
     }
+
+private:
+    T* pntr;
+    size_t* count;
 };
 
 #endif //SMARTPOINTEREXERCISE_SHARED_POINTER_H
