@@ -51,7 +51,8 @@ public:
         size_t& x = *(this->count);
         -- *(this->count);
         if(*(this->count) == 0) {
-            delete pntr;
+            if(pntr != NULL)
+                delete pntr;
             delete count;
         }
     }
